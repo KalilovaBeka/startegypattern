@@ -1,17 +1,19 @@
 package cards.trials;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Deck implements cards.Deck {
     private List<Card> deckOfCards;
+    private String nameStack;
+    private int stackSize;
 
-    public Deck() {
+    public Deck(String nameStack, int stackSize) {
+        this.nameStack = nameStack;
+        this.stackSize = stackSize;
         this.deckOfCards = getShuffledDeckOfCards();
     }
-    public List<Card> getDeckOfCards(){
-        return this.deckOfCards;
+    public Deck() {
+        this.deckOfCards = getShuffledDeckOfCards();
     }
     private List<Card> getShuffledDeckOfCards() {
         List<Card> deck = new ArrayList<>();
@@ -27,18 +29,31 @@ public class Deck implements cards.Deck {
         return deck;
     }
 
-    @Override
-    public cards.Card dealCard() {
-        return null;
-    }
-
-    @Override
-    public List<cards.Card> restCards() {
-        return null;
+    public String getNameStack() {
+        return nameStack;
     }
 
     @Override
     public int size() {
-        return 0;
+        return stackSize;
     }
+
+    @Override
+    public Optional<Card> dealCard() {
+        if(deckOfCards.isEmpty()){
+            return Optional.empty();
+        }
+        Card card = deckOfCards.get(deckOfCards.size() - 1);
+        deckOfCards.remove(card);
+        return Optional.ofNullable(card);
+    }
+
+    @Override
+    public List<cards.trials.Card> restCards() {
+        if(deckOfCards.isEmpty()){
+            return Collections.emptyList();
+        }
+        return deckOfCards;
+    }
+
 }

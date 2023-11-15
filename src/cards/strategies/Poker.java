@@ -2,11 +2,10 @@ package cards.strategies;
 
 
 import cards.CardDealingStrategy;
+import cards.trials.Card;
 import cards.trials.Deck;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 public class Poker implements CardDealingStrategy {
     private Deck deck;
@@ -19,21 +18,27 @@ public class Poker implements CardDealingStrategy {
 
     @Override
     public Map<String, List<cards.trials.Card>> dealStacks(Deck deck, int players) {
-        List<cards.trials.Card> shuffledCards = deck.getDeckOfCards();
         Map<String, List<cards.trials.Card>> pokerStrategy = new HashMap<>();
 
         for(var i = 1; i<= players; i++){
             pokerStrategy.put("Player " + i, new ArrayList<>());
         }
 
-        int count = 52;
-        for(var i = 1; i <= cardsPerHand; i++){ // 1 round
-            for(var j = 1; j <= players; j++){ // each player
-              pokerStrategy.get("Player " + i).add(shuffledCards.get(count-1));
-              count--;
+        List<Card> restCards = deck.restCards();
+        for(var j = 1; j <= players; j++){ // each player
+
+            if(restCards.isEmpty()) return pokerStrategy;
+
+            for(var i = 1; i <= cardsPerHand; i++){ // 1 round
+                Optional<Card> card = deck.dealCard();
+                if(card.isEmpty()){
+                    break;
+                }
+              pokerStrategy.get("Player " + j).add(card.get());
             }
         }
 
+        pokerStrategy.put("Rest Cards", restCards);
         return pokerStrategy;
     }
 }

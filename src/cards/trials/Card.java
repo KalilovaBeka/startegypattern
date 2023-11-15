@@ -7,6 +7,12 @@ public class Card implements cards.Card {
         this.suit = cardSuit;
         this.rank = cardRank;
     }
+
+    @Override
+    public String toString() {
+        return name();
+    }
+
     @Override
     public String name() {
         return "'" + this.suit + " " + this.rank + "'";
